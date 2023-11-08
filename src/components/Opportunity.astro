@@ -1,0 +1,25 @@
+---
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content'
+const { opportunity }: {
+  opportunity: CollectionEntry<'opportunity'>
+} = Astro.props
+const {Content} = await opportunity.render();
+---
+
+<style is:global>
+  article ul {
+      @apply list-disc pl-5;
+  }
+</style>
+
+<article class="py-4">
+  <h3 class="text-2xl">{opportunity.data.name}</h3>
+  <p class="pb-4">
+    <span class="font-bold text-xl">{opportunity.data.title}</span>
+    <span
+      class="ml-[1ex]">{opportunity.data.startDate.toLocaleDateString()}</span>
+    <span class="mx-[1ex]">&mdash;</span>
+    <span>{opportunity.data.present ? 'Present' : opportunity.data.endDate.toLocaleDateString()}</span>
+  </p>
+  <Content />
+</article>

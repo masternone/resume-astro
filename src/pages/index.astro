@@ -1,0 +1,42 @@
+---
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content'
+import Opportunity from "../components/Opportunity.astro";
+const personal = await getEntry('personal', 'edward-grant')
+const opportunitiesUnsorted = await getCollection('opportunity')
+const opportunities = opportunitiesUnsorted.sort((a, b) => {
+  const aDate = a.data.startDate
+  const bDate = b.data.startDate
+  return aDate === bDate ? 0 : aDate > bDate ? -1 : 1;
+})
+---
+
+<html lang="en" class="print:text-[12px]">
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>Resume | Edward Grant</title>
+</head>
+<body class="text-stone-950">
+<main class="flex gap-4 p-4 print:flex-col">
+  <aside class="">
+    <h1 class="text-4xl">{personal.data.name}</h1>
+    <address class="print:hidden flex flex-col">
+      <span>{personal.data.address1}</span>
+      {personal.data.address2 && <span>{personal.data.address2}</span>}
+      <span>{personal.data.city}, {personal.data.state}&nbsp;{personal.data.zip}</span>
+      <span><a href={`tel:${personal.data.phone}`}>{personal.data.phone}</a></span>
+      <span><a href={`mailto:${personal.data.email}`}>{personal.data.email}</a></span>
+    </address>
+  </aside>
+  <section class="grow">
+    <h2 class="text-3xl">PROFESSIONAL EXPERIENCE</h2>
+    <hr class=" border-t-1 border-stone-950" />
+    {opportunities.map((opportunity, index) => (
+      <Opportunity opportunity={opportunity} />
+    ))}
+  </section>
+</main>
+</body>
+</html>
