@@ -3,23 +3,46 @@ import { getCollection, getEntry, type CollectionEntry } from 'astro:content'
 const { opportunity }: {
   opportunity: CollectionEntry<'opportunity'>
 } = Astro.props
-const {Content} = await opportunity.render();
+const { Content } = await opportunity.render();
 ---
 
 <style is:global>
-  article ul {
-      @apply list-disc pl-5;
-  }
+    article ul {
+        @apply list-disc pl-5;
+    }
+
+    @media print {
+        article:has( input[name^="hide"]:checked) {
+            display: none;
+        }
+
+        article label {
+            display: none;
+        }
+    }
 </style>
 
 <article class="py-4">
+  <label>
+    <input type="checkbox"
+           name={`hide-${opportunity.data.name.replace(' ', '')}`} />
+    Hide on print
+  </label>
   <h3 class="text-2xl">{opportunity.data.name}</h3>
   <p class="pb-4">
     <span class="font-bold text-xl">{opportunity.data.title}</span>
     <span
-      class="ml-[1ex]">{opportunity.data.startDate.toLocaleDateString()}</span>
+      class="ml-[1ex]">{opportunity.data.startDate.toLocaleDateString('en-CA', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })}</span>
     <span class="mx-[1ex]">&mdash;</span>
-    <span>{opportunity.data.present ? 'Present' : opportunity.data.endDate.toLocaleDateString()}</span>
+    <span>{opportunity.data.present ? 'Present' : opportunity.data.endDate.toLocaleDateString('en-CA', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })}</span>
   </p>
   <Content />
 </article>
